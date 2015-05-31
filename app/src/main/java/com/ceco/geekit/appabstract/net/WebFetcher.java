@@ -58,6 +58,8 @@ public class WebFetcher {
 
     public static class LoadImage {
 
+        private ImageLoader imageLoader = getImageLoader();
+
         private String imageUrl;
 
         private int defaultImageResId;
@@ -104,7 +106,7 @@ public class WebFetcher {
         }
 
         public LoadImage load() {
-            getImageLoader().get(imageUrl, imageListener);
+            imageLoader.get(imageUrl, imageListener);
             return this;
         }
 

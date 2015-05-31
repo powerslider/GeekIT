@@ -17,43 +17,40 @@ public class BookDetails {
 
     private String isbn;
 
-//    @SerializedName("Title")
-//    private String title;
+    @SerializedName("Title")
+    private String title;
 
     @SerializedName("SubTitle")
     private String subTitle;
 
+    @SerializedName("Author")
     private String author;
 
+    @SerializedName("Publisher")
     private String publisher;
 
-    private Integer year;
+    @SerializedName("Year")
+    private String year;
 
-    private Integer numberOfPages;
+    @SerializedName("Page")
+    private String numberOfPages;
 
     @SerializedName("Description")
     private String description;
 
-//    @SerializedName("Image")
-//    private String bookCoverImageUrl;
+    @SerializedName("Image")
+    private String bookCoverImageUrl;
 
-//    public Bitmap getBookCoverImage() {
-//        return bookCoverImage;
-//    }
-//
-//    public void setBookCoverImage(Bitmap bookCoverImage) {
-//        this.bookCoverImage = bookCoverImage;
-//    }
-//
-//    private Bitmap bookCoverImage;
+    @SerializedName("Download")
+    private String downloadUrl;
 
-//    public String getBookCoverImageUrl() {
-//        return bookCoverImageUrl;
-//    }
-//
-//    public void setBookCoverImageUrl(String bookCoverImageUrl) {
-//        this.bookCoverImageUrl = bookCoverImageUrl;
-//    }
+    public String getBookCoverImageUrl() {
+        return bookCoverImageUrl;
+    }
+
+    public void setBookCoverImageUrl(String bookCoverImageUrl) {
+        this.bookCoverImageUrl = bookCoverImageUrl;
+    }
 
     public String getDescription() {
         return description;
@@ -63,19 +60,19 @@ public class BookDetails {
         this.description = description;
     }
 
-    public Integer getNumberOfPages() {
+    public String getNumberOfPages() {
         return numberOfPages;
     }
 
-    public void setNumberOfPages(Integer numberOfPages) {
+    public void setNumberOfPages(String numberOfPages) {
         this.numberOfPages = numberOfPages;
     }
 
-    public Integer getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -103,13 +100,13 @@ public class BookDetails {
         this.subTitle = subTitle;
     }
 
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getIsbn() {
         return isbn;
@@ -125,5 +122,13 @@ public class BookDetails {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }

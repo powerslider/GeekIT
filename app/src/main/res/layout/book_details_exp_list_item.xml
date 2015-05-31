@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/book_details_exp_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"
+        android:textSize="@dimen/book_details_header_text_size"/>
+
+    <!--<TextView-->
+        <!--android:id="@+id/subtitle_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_subtitle_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/description_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_description_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/isbn_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_isbn_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/author_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_author_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/publisher_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_publisher_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/year_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_year_header"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/page_count_book_details"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"-->
+        <!--android:paddingRight="?android:attr/expandableListPreferredItemIndicatorRight"-->
+        <!--android:textSize="@dimen/book_details_header_text_size"-->
+        <!--android:text="@string/book_details_pages_count_header"/>-->
+
+</LinearLayout>

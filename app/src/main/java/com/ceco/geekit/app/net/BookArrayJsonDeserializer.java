@@ -24,6 +24,7 @@ public class BookArrayJsonDeserializer implements JsonDeserializer<BookGridItem[
 
         for (int i = 0; i < booksArray.size(); i++) {
             bookGridItems[i] = new BookGridItem(
+                    getValueFor("ID", i),
                     getValueFor("Title", i),
                     getValueFor("Image", i));
         }

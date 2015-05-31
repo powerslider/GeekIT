@@ -9,6 +9,7 @@
         android:layout_width="@dimen/grid_item_width"
         android:layout_height="@dimen/grid_item_heigth"
         android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/book_grid_item_margin_top"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/java"
@@ -21,6 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@+id/label"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:layout_marginTop="@dimen/book_cover_title_margin"
         android:textSize="@dimen/book_cover_title_text_size" />
 

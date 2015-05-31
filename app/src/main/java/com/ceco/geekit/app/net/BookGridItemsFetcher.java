@@ -31,6 +31,8 @@ public class BookGridItemsFetcher extends WebFetcher.JsonRequest<BookGridItem[]>
 
     private BookCoverGridAdapter gridAdapter;
 
+    public List<BookGridItem> bookList;
+
     public static BookGridItemsFetcher newInstance() {
         return new BookGridItemsFetcher();
     }
@@ -46,7 +48,7 @@ public class BookGridItemsFetcher extends WebFetcher.JsonRequest<BookGridItem[]>
         return this;
     }
 
-    public BookGridItemsFetcher withTargetGridView(GridView gridView) {
+    public BookGridItemsFetcher withTargetView(GridView gridView) {
         this.gridView = gridView;
         return this;
     }
@@ -56,7 +58,7 @@ public class BookGridItemsFetcher extends WebFetcher.JsonRequest<BookGridItem[]>
         return new Response.Listener<BookGridItem[]>() {
             @Override
             public void onResponse(BookGridItem[] bookGridItems) {
-                List<BookGridItem> bookList = Arrays.asList(bookGridItems);
+                bookList = Arrays.asList(bookGridItems);
                 gridAdapter = new BookCoverGridAdapter(bookList, context);
                 gridView.setAdapter(gridAdapter);
             }
