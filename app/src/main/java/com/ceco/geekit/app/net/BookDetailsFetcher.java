@@ -1,6 +1,8 @@
 package com.ceco.geekit.app.net;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.ExpandableListView;
 
@@ -13,6 +15,7 @@ import com.ceco.geekit.appabstract.net.WebFetcher;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -25,6 +28,10 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
     private ExpandableListView expListView;
 
     private BookDetailsExpandableListAdapter bookDetailsExpListAdapter;
+
+    private List<AbstractMap.SimpleEntry<String, String>> bookDetailsPairs = new ArrayList<>();
+
+//    private List<String> checkedBookDetailsHeaders = new ArrayList<>();
 
     public static BookDetailsFetcher newInstance() {
         return new BookDetailsFetcher();
@@ -77,18 +84,23 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
         bookDetailsHeaders.add("Year");
         bookDetailsHeaders.add("Pages");
 
-        List<AbstractMap.SimpleEntry<String, String>> bookDetailsPairs =
-                new ArrayList<>();
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(0), bookDetails.getTitle()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(1), bookDetails.getSubTitle()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(2), bookDetails.getDescription()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(3), bookDetails.getIsbn()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(4), bookDetails.getAuthor()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(5), bookDetails.getPublisher()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(6), bookDetails.getYear()));
-        bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeaders.get(7), bookDetails.getNumberOfPages()));
+        addBookDetailsPair(bookDetailsHeaders.get(0), bookDetails.getTitle());
+        addBookDetailsPair(bookDetailsHeaders.get(1), bookDetails.getSubTitle());
+        addBookDetailsPair(bookDetailsHeaders.get(2), bookDetails.getDescription());
+        addBookDetailsPair(bookDetailsHeaders.get(3), bookDetails.getIsbn());
+        addBookDetailsPair(bookDetailsHeaders.get(4), bookDetails.getAuthor());
+        addBookDetailsPair(bookDetailsHeaders.get(5), bookDetails.getPublisher());
+        addBookDetailsPair(bookDetailsHeaders.get(6), bookDetails.getYear());
+        addBookDetailsPair(bookDetailsHeaders.get(7), bookDetails.getNumberOfPages());
 
-        bookDetailsExpListAdapter = new BookDetailsExpandableListAdapter(context, bookDetailsHeaders,bookDetailsPairs);
+        bookDetailsExpListAdapter = new BookDetailsExpandableListAdapter(context, bookDetailsPairs);
         expListView.setAdapter(bookDetailsExpListAdapter);
+    }
+
+    private void addBookDetailsPair(String bookDetailsHeader, String bookDetailsValue) {
+        if (bookDetailsValue != null) {
+            if (!bookDetailsValue.isEmpty())
+                bookDetailsPairs.add(new AbstractMap.SimpleEntry<>(bookDetailsHeader, bookDetailsValue));
+        }
     }
 }

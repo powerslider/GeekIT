@@ -21,24 +21,18 @@ public class BookDetailsExpandableListAdapter extends BaseExpandableListAdapter 
 
     private static final int CHILDREN_COUNT = 1;
 
-    private static final int GROUP_COUNT = 8;
-
     private Context context;
-
-    List<String> bookDetailsHeaders;
 
     private List<AbstractMap.SimpleEntry<String, String>> bookDetailsPair;
 
-    public BookDetailsExpandableListAdapter(Context context, List<String> bookDetailsHeaders,
-                                            List<AbstractMap.SimpleEntry<String, String>> bookDetailsPair) {
+    public BookDetailsExpandableListAdapter(Context context, List<AbstractMap.SimpleEntry<String, String>> bookDetailsPair) {
         this.context = context;
-        this.bookDetailsHeaders = bookDetailsHeaders;
         this.bookDetailsPair = bookDetailsPair;
     }
 
     @Override
     public int getGroupCount() {
-        return GROUP_COUNT;
+        return bookDetailsPair.size();
     }
 
     @Override
@@ -48,7 +42,7 @@ public class BookDetailsExpandableListAdapter extends BaseExpandableListAdapter 
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.bookDetailsHeaders.get(groupPosition);
+        return this.bookDetailsPair.get(groupPosition).getKey();
     }
 
     @Override
@@ -107,20 +101,4 @@ public class BookDetailsExpandableListAdapter extends BaseExpandableListAdapter 
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
-
-//    protected static class BookDetailsChildItemHolder {
-//
-//        TextView titleView;
-//        TextView subTitleView;
-//        TextView isbnView;
-//        TextView descriptionView;
-//        TextView authorView;
-//        TextView publischerView;
-//        TextView yearView;
-//        TextView pageCountView;
-//
-//        public static BookDetailsChildItemHolder newInstance() {
-//            return new BookDetailsChildItemHolder();
-//        }
-//    }
 }

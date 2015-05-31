@@ -20,4 +20,6 @@
     <string name="book_details_subtitle_header">Subtitle</string>
     <string name="book_details_title_header">Title</string>
     <string name="next_page_button_text">next</string>
+    <string name="search_hint">Find Books</string>
+    <string name="search_box_title">Search</string>
 </resources>
