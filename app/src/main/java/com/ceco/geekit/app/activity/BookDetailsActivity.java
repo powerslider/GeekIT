@@ -7,12 +7,9 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 
 import com.ceco.geekit.R;
-import com.ceco.geekit.app.adapter.BookDetailsExpandableListAdapter;
-import com.ceco.geekit.app.model.BookDetails;
+import com.ceco.geekit.app.fragment.BooksGridFragment;
 import com.ceco.geekit.app.net.BookDetailsFetcher;
 import com.ceco.geekit.appabstract.net.WebFetcher;
-
-import java.util.AbstractMap;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -23,9 +20,9 @@ public class BookDetailsActivity extends AppCompatActivity {
     private BookDetailsFetcher bookDetailsFetcher = BookDetailsFetcher.newInstance()
             .withContext(this);
 
-     public final WebFetcher.LoadImage imageLoader = WebFetcher.LoadImage.newInstance()
-            .withDefaultImage(R.drawable.no_image)
-            .withErrorImage(R.drawable.error_image);
+    public final WebFetcher.LoadImage imageLoader = WebFetcher.LoadImage.newInstance()
+        .withDefaultImage(R.drawable.no_image)
+        .withErrorImage(R.drawable.error_image);
 
     private ImageView bookCoverView;
 
@@ -43,8 +40,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         bookDetailsExpListView = (ExpandableListView) findViewById(R.id.book_details_exp_list);
 
         Bundle bundle = getIntent().getExtras();
-        String clickedBookId = bundle.getString(BooksGridActivity.BOOK_COVER_ID);
-        String clickedBookCoverUrl = bundle.getString(BooksGridActivity.BOOK_COVER_IMAGE_URL);
+        String clickedBookId = bundle.getString(BooksGridFragment.BOOK_COVER_ID);
+        String clickedBookCoverUrl = bundle.getString(BooksGridFragment.BOOK_COVER_IMAGE_URL);
 
         /**
          * Load book cover thumbnail for the book details view

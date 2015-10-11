@@ -33,6 +33,10 @@ public class BookGridItemsFetcher extends WebFetcher.JsonRequest<BookGridItem[]>
 
     public List<BookGridItem> bookList;
 
+    private BookGridItemsFetcher() {
+        super();
+    }
+
     public static BookGridItemsFetcher newInstance() {
         return new BookGridItemsFetcher();
     }
@@ -71,7 +75,7 @@ public class BookGridItemsFetcher extends WebFetcher.JsonRequest<BookGridItem[]>
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 if(volleyError != null)
-                    Log.e("BooksGridActivity", volleyError.getMessage());
+                    Log.e("BooksGridFragment", volleyError.getMessage());
             }
         };
     }
