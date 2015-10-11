@@ -1,4 +1,4 @@
-package com.ceco.geekit.appabstract.net.fragment;
+package com.ceco.geekit.appabstract.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
