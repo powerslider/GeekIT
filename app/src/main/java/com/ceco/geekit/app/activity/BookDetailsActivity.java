@@ -17,8 +17,8 @@ import com.ceco.geekit.appabstract.fragment.OnDataPass;
  */
 public class BookDetailsActivity extends AppCompatActivity implements OnDataPass {
 
-    String currentBookCoverId;
-    String currentBookCoverUrl;
+    private String currentBookCoverId;
+    private String currentBookCoverUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +37,13 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
         boolean isDualPane = getResources().getBoolean(R.bool.dual_pane);
         if (isDualPane) {
-            BooksListFragment booksListFragment = BooksListFragment
-                    .newInstance(currentBookSearchUrl);
-            FragmentUtil.replaceFragment(R.id.book_list_horizontal_placeholder,
-                    booksListFragment, fm);
-            FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
-                    detailsFragment, fm);
+            renderLandscapeLayout(savedInstanceState, currentBookSearchUrl, fm, detailsFragment);
+        } else {
+            renderPortraitLayout(savedInstanceState, fm, detailsFragment);
         }
+    }
 
+    private void renderPortraitLayout(Bundle savedInstanceState, FragmentManager fm, BookDetailsFragment detailsFragment) {
         if (savedInstanceState != null) {
             currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
             currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
@@ -56,6 +55,29 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
             }
         } else {
             FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
+                    detailsFragment, fm);
+        }
+    }
+
+    private void renderLandscapeLayout(Bundle savedInstanceState, String currentBookSearchUrl, FragmentManager fm, BookDetailsFragment detailsFragment) {
+        BooksListFragment booksListFragment = BooksListFragment
+                .newInstance(currentBookSearchUrl);
+        FragmentUtil.replaceFragment(R.id.book_list_horizontal_placeholder,
+                booksListFragment, fm);
+        if (savedInstanceState != null) {
+            currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
+            currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+            if (currentBookCoverId != null && currentBookCoverUrl != null) {
+                BookDetailsFragment currentDetailsFragment = BookDetailsFragment
+                        .newInstance(currentBookCoverId, currentBookCoverUrl);
+                FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
+                        currentDetailsFragment, fm);
+            } else {
+                FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
+                        detailsFragment, fm);
+            }
+        } else {
+            FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
                     detailsFragment, fm);
         }
     }
