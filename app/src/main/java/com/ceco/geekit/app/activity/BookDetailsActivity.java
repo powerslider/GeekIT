@@ -45,14 +45,7 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
     private void renderPortraitLayout(Bundle savedInstanceState, FragmentManager fm, BookDetailsFragment detailsFragment) {
         if (savedInstanceState != null) {
-            currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
-            currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
-            if (currentBookCoverId != null && currentBookCoverUrl != null) {
-                BookDetailsFragment currentDetailsFragment = BookDetailsFragment
-                        .newInstance(currentBookCoverId, currentBookCoverUrl);
-                FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
-                        currentDetailsFragment, fm);
-            }
+            renderUpdatedDetailsFragmentInPortrait(savedInstanceState, fm);
         } else {
             FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
                     detailsFragment, fm);
@@ -64,18 +57,34 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
                 .newInstance(currentBookSearchUrl);
         FragmentUtil.replaceFragment(R.id.book_list_horizontal_placeholder,
                 booksListFragment, fm);
+        
         if (savedInstanceState != null) {
-            currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
-            currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
-            if (currentBookCoverId != null && currentBookCoverUrl != null) {
-                BookDetailsFragment currentDetailsFragment = BookDetailsFragment
-                        .newInstance(currentBookCoverId, currentBookCoverUrl);
-                FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
-                        currentDetailsFragment, fm);
-            } else {
-                FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
-                        detailsFragment, fm);
-            }
+            renderUpdatedDetailsFragmentInLandscape(savedInstanceState, fm, detailsFragment);
+        } else {
+            FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
+                    detailsFragment, fm);
+        }
+    }
+
+    private void renderUpdatedDetailsFragmentInPortrait(Bundle savedInstanceState, FragmentManager fm) {
+        currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+        if (currentBookCoverId != null && currentBookCoverUrl != null) {
+            BookDetailsFragment currentDetailsFragment = BookDetailsFragment
+                    .newInstance(currentBookCoverId, currentBookCoverUrl);
+            FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
+                    currentDetailsFragment, fm);
+        }
+    }
+
+    private void renderUpdatedDetailsFragmentInLandscape(Bundle savedInstanceState, FragmentManager fm, BookDetailsFragment detailsFragment) {
+        currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+        if (currentBookCoverId != null && currentBookCoverUrl != null) {
+            BookDetailsFragment currentDetailsFragment = BookDetailsFragment
+                    .newInstance(currentBookCoverId, currentBookCoverUrl);
+            FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
+                    currentDetailsFragment, fm);
         } else {
             FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
                     detailsFragment, fm);
