@@ -8,9 +8,9 @@ import android.app.FragmentTransaction;
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 11 Oct 2015
  */
-public class FragmentHelper {
+public class FragmentUtil {
 
-    public static void initFragment(Fragment frag, int container, FragmentManager fm) {
+    public static void initFragment(int container, Fragment frag, FragmentManager fm) {
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(container, frag);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -44,5 +44,14 @@ public class FragmentHelper {
     public static void removeFragment(int container, FragmentManager fm) {
         Fragment f = fm.findFragmentById(container);
         removeFragment(f, fm);
+    }
+
+    public static void replaceFragment(int container, Fragment fragment, FragmentManager fm) {
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(container, fragment);
+        // Replace whatever is in the fragment container view with this fragment,
+        // and add the transaction to the backStack so the user can navigate back
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

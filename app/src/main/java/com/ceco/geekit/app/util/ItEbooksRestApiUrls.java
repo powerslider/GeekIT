@@ -10,5 +10,5 @@ public class ItEbooksRestApiUrls {
 
     public static final String SEARCH = BASE + "search/";
 
-    public static final String BOOK_DETAILS = BASE + "/book";
+    public static final String BOOK_DETAILS = BASE + "book/";
 }

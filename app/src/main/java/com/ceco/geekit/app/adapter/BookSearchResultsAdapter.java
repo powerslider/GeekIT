@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ceco.geekit.R;
-import com.ceco.geekit.app.model.BookGridItem;
+import com.ceco.geekit.app.model.BookSearchResultsItem;
 import com.ceco.geekit.appabstract.net.WebFetcher;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 24 May 2015
  */
-public class BookCoverGridAdapter extends BaseAdapter {
+public class BookSearchResultsAdapter extends BaseAdapter {
 
     public final WebFetcher.LoadImage imageLoader = WebFetcher.LoadImage.newInstance()
             .withDefaultImage(R.drawable.no_image)
@@ -26,21 +26,21 @@ public class BookCoverGridAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<BookGridItem> bookGridItems;
+    private List<BookSearchResultsItem> bookSearchResultsItems;
 
-    public BookCoverGridAdapter(List<BookGridItem> bookDetailses, Context context) {
+    public BookSearchResultsAdapter(List<BookSearchResultsItem> bookDetailses, Context context) {
         this.context = context;
-        this.bookGridItems = bookDetailses;
+        this.bookSearchResultsItems = bookDetailses;
     }
 
     @Override
     public int getCount() {
-        return bookGridItems.size();
+        return bookSearchResultsItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return bookGridItems.get(position);
+        return bookSearchResultsItems.get(position);
     }
 
     @Override
@@ -65,12 +65,12 @@ public class BookCoverGridAdapter extends BaseAdapter {
             bookGridItemHolder = (BookGridItemHolder) convertView.getTag();
         }
 
-        BookGridItem bookGridItem = (BookGridItem) getItem(position);
-        bookGridItemHolder.bookTitleTextView.setText(bookGridItem.getTitle());
+        BookSearchResultsItem bookSearchResultsItem = (BookSearchResultsItem) getItem(position);
+        bookGridItemHolder.bookTitleTextView.setText(bookSearchResultsItem.getTitle());
 
         imageLoader
                 .withImageView(bookGridItemHolder.bookCoverImageView)
-                .withImageUrl(bookGridItem.getBookCoverImageUrl())
+                .withImageUrl(bookSearchResultsItem.getBookCoverImageUrl())
                 .configure()
                 .load();
 

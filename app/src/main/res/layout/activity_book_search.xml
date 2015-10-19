@@ -6,17 +6,9 @@
               android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/book_list_placeholder"
+        android:id="@+id/book_grid_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/detailsElementBackground"
-        android:layout_weight="3"/>
-
-    <FrameLayout
-            android:id="@+id/book_details_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/detailsElementBackground"
-            android:layout_weight="3"/>
+        android:background="?android:attr/detailsElementBackground"/>
 
 </LinearLayout>

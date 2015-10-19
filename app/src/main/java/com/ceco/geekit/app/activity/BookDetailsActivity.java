@@ -1,60 +1,75 @@
 package com.ceco.geekit.app.activity;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
 
 import com.ceco.geekit.R;
+import com.ceco.geekit.app.fragment.BookDetailsFragment;
 import com.ceco.geekit.app.fragment.BooksGridFragment;
-import com.ceco.geekit.app.net.BookDetailsFetcher;
-import com.ceco.geekit.appabstract.net.WebFetcher;
+import com.ceco.geekit.app.fragment.BooksListFragment;
+import com.ceco.geekit.appabstract.fragment.FragmentUtil;
+import com.ceco.geekit.appabstract.fragment.OnDataPass;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 30 May 2015
  */
-public class BookDetailsActivity extends AppCompatActivity {
+public class BookDetailsActivity extends AppCompatActivity implements OnDataPass {
 
-    private BookDetailsFetcher bookDetailsFetcher = BookDetailsFetcher.newInstance()
-            .withContext(this);
-
-    public final WebFetcher.LoadImage imageLoader = WebFetcher.LoadImage.newInstance()
-        .withDefaultImage(R.drawable.no_image)
-        .withErrorImage(R.drawable.error_image);
-
-    private ImageView bookCoverView;
-
-    private Button downloadButton;
-
-    private ExpandableListView bookDetailsExpListView;
+    String currentBookCoverId;
+    String currentBookCoverUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
 
-        downloadButton = (Button) findViewById(R.id.download_button);
-        bookCoverView = (ImageView) findViewById(R.id.book_cover_details);
-        bookDetailsExpListView = (ExpandableListView) findViewById(R.id.book_details_exp_list);
-
         Bundle bundle = getIntent().getExtras();
         String clickedBookId = bundle.getString(BooksGridFragment.BOOK_COVER_ID);
         String clickedBookCoverUrl = bundle.getString(BooksGridFragment.BOOK_COVER_IMAGE_URL);
+        String currentBookSearchUrl = bundle.getString(BooksGridFragment.CURRENT_BOOK_SEARCH_URL);
 
-        /**
-         * Load book cover thumbnail for the book details view
-         */
-        imageLoader
-                .withImageView(bookCoverView)
-                .withImageUrl(clickedBookCoverUrl)
-                .configure()
-                .load();
+        final FragmentManager fm = getFragmentManager();
 
+        BookDetailsFragment detailsFragment = BookDetailsFragment
+                .newInstance(clickedBookId, clickedBookCoverUrl);
 
-        bookDetailsFetcher.withTargetView(bookDetailsExpListView)
-                .withUrl("http://it-ebooks-api.info/v1/book/" + clickedBookId)
-                .execute();
+        boolean isDualPane = getResources().getBoolean(R.bool.dual_pane);
+        if (isDualPane) {
+            BooksListFragment booksListFragment = BooksListFragment
+                    .newInstance(currentBookSearchUrl);
+            FragmentUtil.replaceFragment(R.id.book_list_horizontal_placeholder,
+                    booksListFragment, fm);
+            FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
+                    detailsFragment, fm);
+        }
+
+        if (savedInstanceState != null) {
+            currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
+            currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+            if (currentBookCoverId != null && currentBookCoverUrl != null) {
+                BookDetailsFragment currentDetailsFragment = BookDetailsFragment
+                        .newInstance(currentBookCoverId, currentBookCoverUrl);
+                FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
+                        currentDetailsFragment, fm);
+            }
+        } else {
+            FragmentUtil.replaceFragment(R.id.book_details_vertical_placeholder,
+                    detailsFragment, fm);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(BooksListFragment.CURRENT_BOOK_COVER_ID, currentBookCoverId);
+        outState.putString(BooksListFragment.CURRENT_BOOK_COVER_URL, currentBookCoverUrl);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDataPass(Bundle data) {
+        currentBookCoverId = data.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = data.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
     }
 }
