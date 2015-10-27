@@ -12,9 +12,15 @@ import android.widget.ListView;
 
 import com.ceco.geekit.R;
 import com.ceco.geekit.app.exception.GeekItException;
+import com.ceco.geekit.app.model.BookSearchResultsItem;
 import com.ceco.geekit.app.net.BookSearchResultsItemsFetcher;
 import com.ceco.geekit.appabstract.fragment.FragmentUtil;
 import com.ceco.geekit.appabstract.fragment.OnDataPass;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -24,13 +30,23 @@ public class BooksListFragment extends Fragment {
 
     private static final String BOOK_SEARCH_URL = "BOOK_SEARCH_URL";
 
+    public static final String CURRENT_BOOK_SEARCH_URL = "CURRENT_BOOK_SEARCH_URL";
+
     public static final String CURRENT_BOOK_COVER_ID = "CURRENT_BOOK_COVER_ID";
 
     public static final String CURRENT_BOOK_COVER_URL = "CURRENT_BOOK_COVER_URL";
 
+    public static final String CURRENT_BOOK_SEARCH_RESULTS = "CURRENT_BOOK_SEARCH_RESULTS";
+
+    private static final Pattern DIGITS_PATTERN = Pattern.compile("/page/(\\d+)$");
+
     private OnDataPass dataPasser;
 
     private int currentPage = 1;
+
+    private List<BookSearchResultsItem> currentBookSearchResults;
+
+    private String currentBookSearchUrl;
 
     private ListView listView;
 
@@ -42,6 +58,16 @@ public class BooksListFragment extends Fragment {
     public static BooksListFragment newInstance(String bookSearchUrl) {
         Bundle args = new Bundle();
         args.putString(BOOK_SEARCH_URL, bookSearchUrl);
+        BooksListFragment booksListFragment = new BooksListFragment();
+        booksListFragment.setArguments(args);
+
+        return booksListFragment;
+    }
+    public static BooksListFragment newInstance(String bookSearchUrl, List<BookSearchResultsItem> bookSearchResults) {
+        Bundle args = new Bundle();
+        args.putString(BOOK_SEARCH_URL, bookSearchUrl);
+        args.putParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS,
+                new ArrayList<>(bookSearchResults));
         BooksListFragment booksListFragment = new BooksListFragment();
         booksListFragment.setArguments(args);
 
@@ -67,30 +93,55 @@ public class BooksListFragment extends Fragment {
                 .withContext(getActivity().getBaseContext())
                 .withTargetView(listView);
 
+        final ArrayList<BookSearchResultsItem> bookSearchResults = getArguments()
+                .getParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS);
         final String bookSearchUrl = getArguments().getString(BOOK_SEARCH_URL);
-        if (bookSearchUrl != null) {
-            bookSearchResultsItemsFetcher
-                    .fetchResults(bookSearchUrl);
+        if (bookSearchResults != null) {
+            bookSearchResultsItemsFetcher.setViewOffline(bookSearchResults);
         } else {
-            throw new GeekItException("Book Search Url is null");
+            if (bookSearchUrl != null) {
+                bookSearchResultsItemsFetcher
+                        .fetchResults(bookSearchUrl);
+                currentBookSearchUrl = bookSearchUrl;
+            } else {
+                throw new GeekItException("Book Search Url is null");
+            }
         }
 
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPage++;
-                bookSearchResultsItemsFetcher
-                        .fetchResults(bookSearchUrl + "/page/" + currentPage);
+                if(currentBookSearchUrl == null) {
+                    currentBookSearchUrl = bookSearchUrl;
+                }
+
+                if (currentBookSearchUrl != null) {
+
+                    final Matcher matcher = DIGITS_PATTERN.matcher(currentBookSearchUrl);
+                    if (matcher.find()) {
+                        currentPage = Integer.parseInt(matcher.group(1));
+                        currentPage++;
+
+                        String cleanedBookSearchUrl = currentBookSearchUrl.replaceAll("(\\d+)$", "");
+                        currentBookSearchUrl = cleanedBookSearchUrl + currentPage;
+                    } else {
+                        currentPage++;
+                        currentBookSearchUrl += "/page/" + currentPage;
+                    }
+                    bookSearchResultsItemsFetcher
+                            .fetchResults(currentBookSearchUrl);
+                } else {
+                    throw new GeekItException("Book Search Url for next page is null");
+                }
             }
         });
 
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String clickedItemId = bookSearchResultsItemsFetcher
-                        .bookList.get(position).getId();
-                final String clickedItemBookCoverImageUrl = bookSearchResultsItemsFetcher
-                        .bookList.get(position).getBookCoverImageUrl();
+                currentBookSearchResults = bookSearchResultsItemsFetcher.bookList;
+                final String clickedItemId = currentBookSearchResults.get(position).getId();
+                final String clickedItemBookCoverImageUrl = currentBookSearchResults.get(position).getBookCoverImageUrl();
 
                 BookDetailsFragment detailsFragment = BookDetailsFragment
                         .newInstance(clickedItemId, clickedItemBookCoverImageUrl);
@@ -100,6 +151,9 @@ public class BooksListFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString(CURRENT_BOOK_COVER_ID, clickedItemId);
                 args.putString(CURRENT_BOOK_COVER_URL, clickedItemBookCoverImageUrl);
+                args.putString(CURRENT_BOOK_SEARCH_URL, currentBookSearchUrl);
+                args.putParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS,
+                        new ArrayList<>(currentBookSearchResults));
                 dataPasser.onDataPass(args);
             }
         });

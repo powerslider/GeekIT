@@ -14,6 +14,7 @@ import com.ceco.geekit.appabstract.net.WebFetcher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class BookSearchResultsItemsFetcher extends WebFetcher.JsonRequest<BookSe
     private AbsListView targetView;
 
     private BookSearchResultsAdapter searchResultsAdapter;
+
+    public void setViewOffline(ArrayList<BookSearchResultsItem> bookList) {
+        this.bookList = bookList;
+        setAdapter();
+    }
 
     public List<BookSearchResultsItem> bookList;
 
@@ -73,10 +79,14 @@ public class BookSearchResultsItemsFetcher extends WebFetcher.JsonRequest<BookSe
             @Override
             public void onResponse(BookSearchResultsItem[] bookSearchResultsItems) {
                 bookList = Arrays.asList(bookSearchResultsItems);
-                searchResultsAdapter = new BookSearchResultsAdapter(bookList, context);
-                targetView.setAdapter(searchResultsAdapter);
+                setAdapter();
             }
         };
+    }
+
+    private void setAdapter() {
+        searchResultsAdapter = new BookSearchResultsAdapter(bookList, context);
+        targetView.setAdapter(searchResultsAdapter);
     }
 
     @Override

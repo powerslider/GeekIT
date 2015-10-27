@@ -1,8 +1,6 @@
 package com.ceco.geekit.app.net;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.widget.ExpandableListView;
 
@@ -15,7 +13,6 @@ import com.ceco.geekit.appabstract.net.WebFetcher;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -30,6 +27,12 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
     private BookDetailsExpandableListAdapter bookDetailsExpListAdapter;
 
     private List<AbstractMap.SimpleEntry<String, String>> bookDetailsPairs = new ArrayList<>();
+
+    public BookDetails getBookDetails() {
+        return bookDetails;
+    }
+
+    private BookDetails bookDetails;
 
 //    private List<String> checkedBookDetailsHeaders = new ArrayList<>();
 
@@ -74,6 +77,7 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
     }
 
     private void populateBookDetailsData(BookDetails bookDetails) {
+        this.bookDetails = bookDetails;
         List<String> bookDetailsHeaders = new ArrayList<>();
         bookDetailsHeaders.add("Title");
         bookDetailsHeaders.add("Subtitle");

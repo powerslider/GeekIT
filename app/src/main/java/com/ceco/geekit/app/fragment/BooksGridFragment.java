@@ -13,7 +13,12 @@ import android.widget.GridView;
 import com.ceco.geekit.R;
 import com.ceco.geekit.app.activity.BookDetailsActivity;
 import com.ceco.geekit.app.exception.GeekItException;
+import com.ceco.geekit.app.model.BookSearchResultsItem;
 import com.ceco.geekit.app.net.BookSearchResultsItemsFetcher;
+import com.ceco.geekit.appabstract.fragment.OnDataPass;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,10 +32,15 @@ public class BooksGridFragment extends Fragment {
     public static final String BOOK_COVER_IMAGE_URL = "BOOK_COVER_IMAGE_URL";
     public static final String BOOK_SEARCH_URL = "BOOK_SEARCH_URL";
     public static final String CURRENT_BOOK_SEARCH_URL = "CURRENT_BOOK_SEARCH_URL";
+    public static final String CURRENT_BOOK_SEARCH_RESULTS = "CURRENT_BOOK_SEARCH_RESULTS";
+
+    private OnDataPass dataPasser;
 
     private int currentPage = 1;
 
     private String currentBookSearchUrl;
+
+    private List<BookSearchResultsItem> currentBookSearchResults;
 
     private GridView gridView;
 
@@ -47,11 +57,6 @@ public class BooksGridFragment extends Fragment {
         return booksGridFragment;
     }
 
-//    public BooksGridFragment withBookSearchUrl(String bookSearchUrl) {
-//        this.bookSearchUrl = bookSearchUrl;
-//        return this;
-//    }
-
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books_grid, container, false);
@@ -64,36 +69,47 @@ public class BooksGridFragment extends Fragment {
                 .withContext(getActivity().getBaseContext())
                 .withTargetView(gridView);
 
+        final ArrayList<BookSearchResultsItem> bookSearchResults = getArguments()
+                .getParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS);
         final String bookSearchUrl = getArguments().getString(BOOK_SEARCH_URL);
-        currentBookSearchUrl = bookSearchUrl;
-        if (bookSearchUrl != null) {
-            bookSearchResultsItemsFetcher
-                    .fetchResults(bookSearchUrl);
+        if (bookSearchResults != null) {
+            bookSearchResultsItemsFetcher.setViewOffline(bookSearchResults);
         } else {
-            throw new GeekItException("Book Search Url is null");
+            if (bookSearchUrl != null) {
+                bookSearchResultsItemsFetcher
+                        .fetchResults(bookSearchUrl);
+                currentBookSearchUrl = bookSearchUrl;
+            } else {
+                throw new GeekItException("Book Search Url is null");
+            }
         }
 
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentPage++;
-                currentBookSearchUrl = bookSearchUrl + "/page/" + currentPage;
-                bookSearchResultsItemsFetcher
-                        .fetchResults(currentBookSearchUrl);
+                if (bookSearchUrl != null) {
+                    currentBookSearchUrl = bookSearchUrl + "/page/" + currentPage;
+                    bookSearchResultsItemsFetcher
+                            .fetchResults(currentBookSearchUrl);
+                } else {
+                    throw new GeekItException("Book Search Url for next page is null");
+                }
             }
         });
 
         gridView.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String clickedItemId = bookSearchResultsItemsFetcher
-                        .bookList.get(position).getId();
-                final String clickedItemBookCoverImageUrl = bookSearchResultsItemsFetcher
-                        .bookList.get(position).getBookCoverImageUrl();
+                currentBookSearchResults = bookSearchResultsItemsFetcher.bookList;
+                final String clickedItemId = currentBookSearchResults.get(position).getId();
+                final String clickedItemBookCoverImageUrl = currentBookSearchResults.get(position).getBookCoverImageUrl();
                 Intent intent = new Intent(getActivity(), BookDetailsActivity.class);
                 intent.putExtra(BOOK_COVER_ID, clickedItemId);
                 intent.putExtra(BOOK_COVER_IMAGE_URL, clickedItemBookCoverImageUrl);
                 intent.putExtra(CURRENT_BOOK_SEARCH_URL, currentBookSearchUrl);
+                intent.putParcelableArrayListExtra(CURRENT_BOOK_SEARCH_RESULTS,
+                        new ArrayList<>(BooksGridFragment.this.currentBookSearchResults));
                 startActivity(intent);
             }
         });

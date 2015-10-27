@@ -8,8 +8,11 @@ import com.ceco.geekit.R;
 import com.ceco.geekit.app.fragment.BookDetailsFragment;
 import com.ceco.geekit.app.fragment.BooksGridFragment;
 import com.ceco.geekit.app.fragment.BooksListFragment;
+import com.ceco.geekit.app.model.BookSearchResultsItem;
 import com.ceco.geekit.appabstract.fragment.FragmentUtil;
 import com.ceco.geekit.appabstract.fragment.OnDataPass;
+
+import java.util.ArrayList;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -19,6 +22,7 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
     private String currentBookCoverId;
     private String currentBookCoverUrl;
+    private ArrayList<BookSearchResultsItem> currentBookSearchResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
         String clickedBookId = bundle.getString(BooksGridFragment.BOOK_COVER_ID);
         String clickedBookCoverUrl = bundle.getString(BooksGridFragment.BOOK_COVER_IMAGE_URL);
         String currentBookSearchUrl = bundle.getString(BooksGridFragment.CURRENT_BOOK_SEARCH_URL);
+        currentBookSearchResults = bundle.getParcelableArrayList(BooksGridFragment.CURRENT_BOOK_SEARCH_RESULTS);
 
         final FragmentManager fm = getFragmentManager();
 
@@ -43,7 +48,9 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
         }
     }
 
-    private void renderPortraitLayout(Bundle savedInstanceState, FragmentManager fm, BookDetailsFragment detailsFragment) {
+    private void renderPortraitLayout(Bundle savedInstanceState,
+                                      FragmentManager fm,
+                                      BookDetailsFragment detailsFragment) {
         if (savedInstanceState != null) {
             renderUpdatedDetailsFragmentInPortrait(savedInstanceState, fm);
         } else {
@@ -52,12 +59,19 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
         }
     }
 
-    private void renderLandscapeLayout(Bundle savedInstanceState, String currentBookSearchUrl, FragmentManager fm, BookDetailsFragment detailsFragment) {
+    private void renderLandscapeLayout(Bundle savedInstanceState,
+                                       String currentBookSearchUrl,
+                                       FragmentManager fm,
+                                       BookDetailsFragment detailsFragment) {
+        if (savedInstanceState != null) {
+            currentBookSearchResults = savedInstanceState
+                    .getParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS);
+        }
         BooksListFragment booksListFragment = BooksListFragment
-                .newInstance(currentBookSearchUrl);
+                .newInstance(currentBookSearchUrl, currentBookSearchResults);
         FragmentUtil.replaceFragment(R.id.book_list_horizontal_placeholder,
                 booksListFragment, fm);
-        
+
         if (savedInstanceState != null) {
             renderUpdatedDetailsFragmentInLandscape(savedInstanceState, fm, detailsFragment);
         } else {
@@ -95,6 +109,7 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(BooksListFragment.CURRENT_BOOK_COVER_ID, currentBookCoverId);
         outState.putString(BooksListFragment.CURRENT_BOOK_COVER_URL, currentBookCoverUrl);
+        outState.putParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS, currentBookSearchResults);
         super.onSaveInstanceState(outState);
     }
 
@@ -102,5 +117,6 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
     public void onDataPass(Bundle data) {
         currentBookCoverId = data.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
         currentBookCoverUrl = data.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+        currentBookSearchResults = data.getParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS);
     }
 }

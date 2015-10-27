@@ -23,12 +23,6 @@ public class BookDetailsFragment extends Fragment {
     public static final String BOOK_COVER_ID = "BOOK_COVER_ID";
 
     public static final String BOOK_COVER_IMAGE_URL = "BOOK_COVER_IMAGE_URL";
-//    public static final String CURRENT_BOOK_COVER_ID = "CURRENT_BOOK_COVER_ID";
-//    public static final String CURRENT_BOOK_COVER_URL = "CURRENT_BOOK_COVER_URL";
-//
-////    private String clickedBookCoverUrl;
-//
-//    private OnDataPass dataPasser;
 
     private BookDetailsFetcher bookDetailsFetcher = BookDetailsFetcher.newInstance();
 
@@ -53,12 +47,6 @@ public class BookDetailsFragment extends Fragment {
 
         return detailsFragment;
     }
-
-//    @Override
-//    public void onAttach(Activity a) {
-//        super.onAttach(a);
-//        dataPasser = (OnDataPass) a;
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,11 +76,6 @@ public class BookDetailsFragment extends Fragment {
                 .withTargetView(bookDetailsExpListView)
                 .withUrl(ItEbooksRestApiUrls.BOOK_DETAILS + clickedBookId)
                 .execute();
-
-//        Bundle args = new Bundle();
-//        args.putString(CURRENT_BOOK_COVER_ID, clickedBookId);
-//        args.putString(CURRENT_BOOK_COVER_URL, clickedBookCoverUrl);
-//        dataPasser.onDataPass(args);
 
         return view;
     }
