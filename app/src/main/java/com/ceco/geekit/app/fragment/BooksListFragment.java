@@ -19,26 +19,19 @@ import com.ceco.geekit.appabstract.fragment.OnDataPass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_SEARCH_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_ID;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_RESULTS;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.constructNextPageBookSearchUrl;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 10 Oct 2015
  */
 public class BooksListFragment extends Fragment {
-
-    private static final String BOOK_SEARCH_URL = "BOOK_SEARCH_URL";
-
-    public static final String CURRENT_BOOK_SEARCH_URL = "CURRENT_BOOK_SEARCH_URL";
-
-    public static final String CURRENT_BOOK_COVER_ID = "CURRENT_BOOK_COVER_ID";
-
-    public static final String CURRENT_BOOK_COVER_URL = "CURRENT_BOOK_COVER_URL";
-
-    public static final String CURRENT_BOOK_SEARCH_RESULTS = "CURRENT_BOOK_SEARCH_RESULTS";
-
-    private static final Pattern DIGITS_PATTERN = Pattern.compile("/page/(\\d+)$");
 
     private OnDataPass dataPasser;
 
@@ -54,7 +47,6 @@ public class BooksListFragment extends Fragment {
 
     private BookSearchResultsItemsFetcher bookSearchResultsItemsFetcher = BookSearchResultsItemsFetcher.newInstance();
 
-
     public static BooksListFragment newInstance(String bookSearchUrl) {
         Bundle args = new Bundle();
         args.putString(BOOK_SEARCH_URL, bookSearchUrl);
@@ -63,6 +55,7 @@ public class BooksListFragment extends Fragment {
 
         return booksListFragment;
     }
+
     public static BooksListFragment newInstance(String bookSearchUrl, List<BookSearchResultsItem> bookSearchResults) {
         Bundle args = new Bundle();
         args.putString(BOOK_SEARCH_URL, bookSearchUrl);
@@ -114,20 +107,8 @@ public class BooksListFragment extends Fragment {
                 if(currentBookSearchUrl == null) {
                     currentBookSearchUrl = bookSearchUrl;
                 }
-
                 if (currentBookSearchUrl != null) {
-
-                    final Matcher matcher = DIGITS_PATTERN.matcher(currentBookSearchUrl);
-                    if (matcher.find()) {
-                        currentPage = Integer.parseInt(matcher.group(1));
-                        currentPage++;
-
-                        String cleanedBookSearchUrl = currentBookSearchUrl.replaceAll("(\\d+)$", "");
-                        currentBookSearchUrl = cleanedBookSearchUrl + currentPage;
-                    } else {
-                        currentPage++;
-                        currentBookSearchUrl += "/page/" + currentPage;
-                    }
+                    currentBookSearchUrl = constructNextPageBookSearchUrl(currentBookSearchUrl, currentPage);
                     bookSearchResultsItemsFetcher
                             .fetchResults(currentBookSearchUrl);
                 } else {

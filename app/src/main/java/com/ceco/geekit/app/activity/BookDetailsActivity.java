@@ -6,13 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.ceco.geekit.R;
 import com.ceco.geekit.app.fragment.BookDetailsFragment;
-import com.ceco.geekit.app.fragment.BooksGridFragment;
 import com.ceco.geekit.app.fragment.BooksListFragment;
 import com.ceco.geekit.app.model.BookSearchResultsItem;
 import com.ceco.geekit.appabstract.fragment.FragmentUtil;
 import com.ceco.geekit.appabstract.fragment.OnDataPass;
 
 import java.util.ArrayList;
+
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_ID;
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_IMAGE_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_ID;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_RESULTS;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_URL;
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
@@ -30,10 +36,10 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
         setContentView(R.layout.activity_book_details);
 
         Bundle bundle = getIntent().getExtras();
-        String clickedBookId = bundle.getString(BooksGridFragment.BOOK_COVER_ID);
-        String clickedBookCoverUrl = bundle.getString(BooksGridFragment.BOOK_COVER_IMAGE_URL);
-        String currentBookSearchUrl = bundle.getString(BooksGridFragment.CURRENT_BOOK_SEARCH_URL);
-        currentBookSearchResults = bundle.getParcelableArrayList(BooksGridFragment.CURRENT_BOOK_SEARCH_RESULTS);
+        String clickedBookId = bundle.getString(BOOK_COVER_ID);
+        String clickedBookCoverUrl = bundle.getString(BOOK_COVER_IMAGE_URL);
+        String currentBookSearchUrl = bundle.getString(CURRENT_BOOK_SEARCH_URL);
+        currentBookSearchResults = bundle.getParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS);
 
         final FragmentManager fm = getFragmentManager();
 
@@ -42,15 +48,15 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
         boolean isDualPane = getResources().getBoolean(R.bool.dual_pane);
         if (isDualPane) {
-            renderLandscapeLayout(savedInstanceState, currentBookSearchUrl, fm, detailsFragment);
+            renderLandscapeLayout(savedInstanceState, currentBookSearchUrl, detailsFragment, fm);
         } else {
-            renderPortraitLayout(savedInstanceState, fm, detailsFragment);
+            renderPortraitLayout(savedInstanceState, detailsFragment, fm);
         }
     }
 
     private void renderPortraitLayout(Bundle savedInstanceState,
-                                      FragmentManager fm,
-                                      BookDetailsFragment detailsFragment) {
+                                      BookDetailsFragment detailsFragment,
+                                      FragmentManager fm) {
         if (savedInstanceState != null) {
             renderUpdatedDetailsFragmentInPortrait(savedInstanceState, fm);
         } else {
@@ -61,11 +67,11 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
     private void renderLandscapeLayout(Bundle savedInstanceState,
                                        String currentBookSearchUrl,
-                                       FragmentManager fm,
-                                       BookDetailsFragment detailsFragment) {
+                                       BookDetailsFragment detailsFragment,
+                                       FragmentManager fm) {
         if (savedInstanceState != null) {
             currentBookSearchResults = savedInstanceState
-                    .getParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS);
+                    .getParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS);
         }
         BooksListFragment booksListFragment = BooksListFragment
                 .newInstance(currentBookSearchUrl, currentBookSearchResults);
@@ -73,7 +79,7 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
                 booksListFragment, fm);
 
         if (savedInstanceState != null) {
-            renderUpdatedDetailsFragmentInLandscape(savedInstanceState, fm, detailsFragment);
+            renderUpdatedDetailsFragmentInLandscape(savedInstanceState, detailsFragment, fm);
         } else {
             FragmentUtil.replaceFragment(R.id.book_details_horizontal_placeholder,
                     detailsFragment, fm);
@@ -81,8 +87,8 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
     }
 
     private void renderUpdatedDetailsFragmentInPortrait(Bundle savedInstanceState, FragmentManager fm) {
-        currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
-        currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+        currentBookCoverId = savedInstanceState.getString(CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = savedInstanceState.getString(CURRENT_BOOK_COVER_URL);
         if (currentBookCoverId != null && currentBookCoverUrl != null) {
             BookDetailsFragment currentDetailsFragment = BookDetailsFragment
                     .newInstance(currentBookCoverId, currentBookCoverUrl);
@@ -91,9 +97,11 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
         }
     }
 
-    private void renderUpdatedDetailsFragmentInLandscape(Bundle savedInstanceState, FragmentManager fm, BookDetailsFragment detailsFragment) {
-        currentBookCoverId = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
-        currentBookCoverUrl = savedInstanceState.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
+    private void renderUpdatedDetailsFragmentInLandscape(Bundle savedInstanceState,
+                                                         BookDetailsFragment detailsFragment,
+                                                         FragmentManager fm) {
+        currentBookCoverId = savedInstanceState.getString(CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = savedInstanceState.getString(CURRENT_BOOK_COVER_URL);
         if (currentBookCoverId != null && currentBookCoverUrl != null) {
             BookDetailsFragment currentDetailsFragment = BookDetailsFragment
                     .newInstance(currentBookCoverId, currentBookCoverUrl);
@@ -107,16 +115,16 @@ public class BookDetailsActivity extends AppCompatActivity implements OnDataPass
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(BooksListFragment.CURRENT_BOOK_COVER_ID, currentBookCoverId);
-        outState.putString(BooksListFragment.CURRENT_BOOK_COVER_URL, currentBookCoverUrl);
-        outState.putParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS, currentBookSearchResults);
+        outState.putString(CURRENT_BOOK_COVER_ID, currentBookCoverId);
+        outState.putString(CURRENT_BOOK_COVER_URL, currentBookCoverUrl);
+        outState.putParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS, currentBookSearchResults);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDataPass(Bundle data) {
-        currentBookCoverId = data.getString(BooksListFragment.CURRENT_BOOK_COVER_ID);
-        currentBookCoverUrl = data.getString(BooksListFragment.CURRENT_BOOK_COVER_URL);
-        currentBookSearchResults = data.getParcelableArrayList(BooksListFragment.CURRENT_BOOK_SEARCH_RESULTS);
+        currentBookCoverId = data.getString(CURRENT_BOOK_COVER_ID);
+        currentBookCoverUrl = data.getString(CURRENT_BOOK_COVER_URL);
+        currentBookSearchResults = data.getParcelableArrayList(CURRENT_BOOK_SEARCH_RESULTS);
     }
 }

@@ -14,15 +14,14 @@ import com.ceco.geekit.app.net.BookDetailsFetcher;
 import com.ceco.geekit.app.util.ItEbooksRestApiUrls;
 import com.ceco.geekit.appabstract.net.WebFetcher;
 
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_ID;
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_IMAGE_URL;
+
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 11 Oct 2015
  */
 public class BookDetailsFragment extends Fragment {
-
-    public static final String BOOK_COVER_ID = "BOOK_COVER_ID";
-
-    public static final String BOOK_COVER_IMAGE_URL = "BOOK_COVER_IMAGE_URL";
 
     private BookDetailsFetcher bookDetailsFetcher = BookDetailsFetcher.newInstance();
 

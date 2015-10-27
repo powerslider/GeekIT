@@ -20,19 +20,19 @@ import com.ceco.geekit.appabstract.fragment.OnDataPass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_ID;
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_COVER_IMAGE_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_SEARCH_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_RESULTS;
+import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_SEARCH_URL;
+import static com.ceco.geekit.app.util.ItEbooksUtils.constructNextPageBookSearchUrl;
+
 
 /**
  * @author Tsvetan Dimitrov <tsvetan.dimitrov23@gmail.com>
  * @since 10 Oct 2015
  */
 public class BooksGridFragment extends Fragment {
-
-    public static final String BOOK_COVER_ID = "BOOK_COVER_ID";
-
-    public static final String BOOK_COVER_IMAGE_URL = "BOOK_COVER_IMAGE_URL";
-    public static final String BOOK_SEARCH_URL = "BOOK_SEARCH_URL";
-    public static final String CURRENT_BOOK_SEARCH_URL = "CURRENT_BOOK_SEARCH_URL";
-    public static final String CURRENT_BOOK_SEARCH_RESULTS = "CURRENT_BOOK_SEARCH_RESULTS";
 
     private OnDataPass dataPasser;
 
@@ -87,9 +87,11 @@ public class BooksGridFragment extends Fragment {
         nextPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPage++;
-                if (bookSearchUrl != null) {
-                    currentBookSearchUrl = bookSearchUrl + "/page/" + currentPage;
+                if(currentBookSearchUrl == null) {
+                    currentBookSearchUrl = bookSearchUrl;
+                }
+                if (currentBookSearchUrl != null) {
+                    currentBookSearchUrl = constructNextPageBookSearchUrl(currentBookSearchUrl, currentPage);
                     bookSearchResultsItemsFetcher
                             .fetchResults(currentBookSearchUrl);
                 } else {

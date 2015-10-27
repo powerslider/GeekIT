@@ -91,22 +91,17 @@ public class BookSearchResultsItemsFetcher extends WebFetcher.JsonRequest<BookSe
 
     @Override
     public Response.ErrorListener createErrorListener() {
-        if (targetView instanceof GridView) {
-            return new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    if(volleyError != null)
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if(volleyError != null) {
+                    if (targetView instanceof GridView) {
                         Log.e("BooksGridFragment", volleyError.getMessage());
-                }
-            };
-        } else {
-            return new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    if(volleyError != null)
+                    } else {
                         Log.e("BooksListFragment", volleyError.getMessage());
+                    }
                 }
-            };
-        }
+            }
+        };
     }
 }
