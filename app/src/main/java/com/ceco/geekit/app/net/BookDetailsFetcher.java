@@ -7,6 +7,7 @@ import android.widget.ExpandableListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ceco.geekit.app.adapter.BookDetailsExpandableListAdapter;
+import com.ceco.geekit.app.exception.GeekItException;
 import com.ceco.geekit.app.model.BookDetails;
 import com.ceco.geekit.appabstract.net.WebFetcher;
 
@@ -28,11 +29,7 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
 
     private List<AbstractMap.SimpleEntry<String, String>> bookDetailsPairs = new ArrayList<>();
 
-    public BookDetails getBookDetails() {
-        return bookDetails;
-    }
-
-    private BookDetails bookDetails;
+    public BookDetails bookDetails;
 
 //    private List<String> checkedBookDetailsHeaders = new ArrayList<>();
 
@@ -50,9 +47,25 @@ public class BookDetailsFetcher extends WebFetcher.JsonRequest<BookDetails> {
         return this;
     }
 
-    public BookDetailsFetcher withTargetView(ExpandableListView gridView) {
-        this.expListView = gridView;
+    public BookDetailsFetcher withTargetView(ExpandableListView expListView) {
+        this.expListView = expListView;
         return this;
+    }
+
+    public BookDetails getBookDetails() {
+        return bookDetails;
+    }
+
+    public void setViewOffline(BookDetails bookDetails) {
+        populateBookDetailsData(bookDetails);
+    }
+
+    public void fetchResults(String url) {
+        if (expListView == null) {
+            throw new GeekItException("Please set a view to display book details!");
+        }
+
+        withUrl(url).execute();
     }
 
     @Override

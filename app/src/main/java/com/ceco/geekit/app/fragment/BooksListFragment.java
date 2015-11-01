@@ -3,6 +3,7 @@ package com.ceco.geekit.app.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.ceco.geekit.appabstract.fragment.OnDataPass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_LIST_TAG;
 import static com.ceco.geekit.app.util.ItEbooksUtils.BOOK_SEARCH_URL;
 import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_ID;
 import static com.ceco.geekit.app.util.ItEbooksUtils.CURRENT_BOOK_COVER_URL;
@@ -91,11 +93,13 @@ public class BooksListFragment extends Fragment {
         final String bookSearchUrl = getArguments().getString(BOOK_SEARCH_URL);
         if (bookSearchResults != null) {
             bookSearchResultsItemsFetcher.setViewOffline(bookSearchResults);
+            Log.i(BOOK_LIST_TAG, ">>>>>>> Fetch offline");
         } else {
             if (bookSearchUrl != null) {
                 bookSearchResultsItemsFetcher
                         .fetchResults(bookSearchUrl);
                 currentBookSearchUrl = bookSearchUrl;
+                Log.i(BOOK_LIST_TAG, ">>>>>>> Fetch online");
             } else {
                 throw new GeekItException("Book Search Url is null");
             }
@@ -111,6 +115,7 @@ public class BooksListFragment extends Fragment {
                     currentBookSearchUrl = constructNextPageBookSearchUrl(currentBookSearchUrl, currentPage);
                     bookSearchResultsItemsFetcher
                             .fetchResults(currentBookSearchUrl);
+                    Log.i(BOOK_LIST_TAG, ">>>>>>> Fetch next page online");
                 } else {
                     throw new GeekItException("Book Search Url for next page is null");
                 }
@@ -120,7 +125,7 @@ public class BooksListFragment extends Fragment {
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                currentBookSearchResults = bookSearchResultsItemsFetcher.bookList;
+                currentBookSearchResults = bookSearchResultsItemsFetcher.getBookList();
                 final String clickedItemId = currentBookSearchResults.get(position).getId();
                 final String clickedItemBookCoverImageUrl = currentBookSearchResults.get(position).getBookCoverImageUrl();
 

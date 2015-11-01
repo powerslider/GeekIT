@@ -16,6 +16,11 @@ public class ItEbooksUtils {
     public static final String CURRENT_BOOK_SEARCH_URL = "CURRENT_BOOK_SEARCH_URL";
     public static final String CURRENT_BOOK_COVER_URL = "CURRENT_BOOK_COVER_URL";
     public static final String CURRENT_BOOK_SEARCH_RESULTS = "CURRENT_BOOK_SEARCH_RESULTS";
+    public static final String CURRENT_BOOK_DETAILS = "CURRENT_BOOK_DETAILS";
+
+    public static final String BOOK_LIST_TAG = "BOOK_LIST";
+    public static final String BOOK_DETAILS_TAG = "BOOK_DETAILS";
+    public static final String BOOK_GRID_TAG = "BOOK_GRID";
 
     private static final Pattern NEXT_PAGE_URL_PATTERN = Pattern.compile("/page/(\\d+)$");
 

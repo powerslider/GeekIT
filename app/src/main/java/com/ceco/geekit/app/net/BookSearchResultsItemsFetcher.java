@@ -65,6 +65,15 @@ public class BookSearchResultsItemsFetcher extends WebFetcher.JsonRequest<BookSe
         return this;
     }
 
+    public List<BookSearchResultsItem> getBookList() {
+        return bookList;
+    }
+
+    private void setAdapter() {
+        searchResultsAdapter = new BookSearchResultsAdapter(bookList, context);
+        targetView.setAdapter(searchResultsAdapter);
+    }
+
     public void fetchResults(String url) {
         if (targetView == null) {
             throw new GeekItException("Please set a view to display search results!");
@@ -82,11 +91,6 @@ public class BookSearchResultsItemsFetcher extends WebFetcher.JsonRequest<BookSe
                 setAdapter();
             }
         };
-    }
-
-    private void setAdapter() {
-        searchResultsAdapter = new BookSearchResultsAdapter(bookList, context);
-        targetView.setAdapter(searchResultsAdapter);
     }
 
     @Override
